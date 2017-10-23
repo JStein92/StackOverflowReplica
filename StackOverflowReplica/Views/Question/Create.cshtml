@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model StackOverflowReplica.Models.Question
+
+<h2>Ask a Question</h2>
+<hr />
+@using (Html.BeginForm())
+{
+    <label>Title of your question</label>
+    @Html.EditorFor(model => model.Title)
+
+    <label>Describe the question</label>
+    @Html.EditorFor(model => model.ContentBody)
+
+    <input type="submit" value="Create" />
+}
+@Html.ActionLink("Back to List", "Index")

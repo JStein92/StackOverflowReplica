@@ -1,0 +1,19 @@
+﻿@model StackOverflowReplica.Models.Question
+
+@using System.Security.Claims
+
+@if (User.Identity.IsAuthenticated)
+ {
+ <h2>Hello, @User.Identity.Name</h2>
+<hr/>
+
+@Html.ActionLink("Post a response", "Create", "Response")
+} else {
+    <p>@Html.ActionLink("Log in to view this question", "Login", "Account")</p>
+}
+
+@foreach(var response in Model.Responses)
+{
+    <p>response.ContentBody</p>
+}
+

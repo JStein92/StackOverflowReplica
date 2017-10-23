@@ -1,0 +1,43 @@
+﻿@model IEnumerable<StackOverflowReplica.Models.Question>
+
+ @if (User.Identity.IsAuthenticated)
+ {
+ <h2>Hello, @User.Identity.Name</h2>
+<hr/>
+
+@Html.ActionLink("Ask a Question", "Create")
+} else {
+    <p>@Html.ActionLink("Log in to post a question", "Login", "Account")</p>
+}
+
+
+
+@if (Model.Any())
+{
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Votes</th>
+      <th>Title</th>
+      <th>Author</th>
+    </tr>
+  </thead>
+
+  <tbody>
+	<hr>
+    @foreach (var question in Model)
+    {
+    	<tr>
+          <td>@Html.DisplayFor(modelQuestion => question.VoteCount)</td>
+          <td>@Html.ActionLink((string)question.Title, "Details", "Question", new { QuestionId = question.Id })</td>
+          <td>@Html.DisplayFor(modelQuestion => question.User.UserName)</td>
+        </tr>
+    }
+	</tbody>
+	</table>
+}
+else
+{
+    <p>No Questions</p>
+}
+

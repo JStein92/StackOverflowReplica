@@ -1,0 +1,14 @@
+﻿@using StackOverflowReplica.Models.Response
+
+@{
+    ViewData["Title"] = "Response - Create";
+    Layout = "~/Views/Shared/_Layout.cshmtl";
+}
+
+@using (Html.BeginForm())
+{   
+    @Html.HiddenFor(model => m)
+    
+    @Html.LabelFor(model => model.ContentBody)
+    @Html.EditorFor(model => model.ContentBody)
+}

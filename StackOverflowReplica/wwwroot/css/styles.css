@@ -1,0 +1,16 @@
+﻿.btn-logoff{
+    margin-left:10px;
+    background-color:none;
+    background:none !important;
+   
+}
+.btn-logoff:hover {
+    cursor:pointer;
+    text-decoration:underline;
+}
+.black-text {
+    color: black !important;
+    background-color:black;
+
+    font-size:3em;
+}
