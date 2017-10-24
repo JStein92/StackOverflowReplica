@@ -39,14 +39,16 @@ if (response.Id != Model.BestResponseId)
        <hr/>
         <h3>@response.User.UserName</h3>
         <p>@response.ContentBody</p>
-       
-       @if(User.Identity.Name == @Model.User.UserName)
-        {
-            <span>
-	            Votes: @response.VoteCount |
+
+          <span>
+                Votes: @response.VoteCount |
                 @Html.ActionLink("Upvote", "VoteResponse", "Response", new {ResponseId = response.Id, QuestionId = @Model.Id, vote = 1 }) |
                 @Html.ActionLink("Downvote", "VoteResponse", "Response", new {ResponseId = response.Id, QuestionId = @Model.Id, vote = -1 })
-	        </span>
+            </span>
+       
+       if(User.Identity.Name == @Model.User.UserName)
+        {
+          
             <div>@Html.ActionLink("Set as Best Response", "SetAsBest", "Question", new {ResponseId = response.Id, QuestionId = @Model.Id})</div>
         }
     }
