@@ -1,14 +1,24 @@
-﻿@using StackOverflowReplica.Models.Response
+﻿@model StackOverflowReplica.Models.Response
 
 @{
     ViewData["Title"] = "Response - Create";
-    Layout = "~/Views/Shared/_Layout.cshmtl";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+@using System.Security.Claims
+
+<h2>@ViewBag.thisQuestion.Title</h2>
+<p>@ViewBag.thisQuestion.ContentBody</p>
+
+<h1>Enter your response, @User.Identity.Name</h1>
 
 @using (Html.BeginForm())
 {   
-    @Html.HiddenFor(model => m)
-    
-    @Html.LabelFor(model => model.ContentBody)
-    @Html.EditorFor(model => model.ContentBody)
+    <input type="hidden" value="@ViewBag.thisQuestion.Id">
+
+    <div class = "form-group">
+    @Html.TextAreaFor(model => model.ContentBody, new {@class = "form-control"})
+    </div>
+
+    <input type = "submit" class= "btn btn-success" value="Submit answer">
 }

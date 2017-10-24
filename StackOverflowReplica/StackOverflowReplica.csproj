@@ -30,6 +30,9 @@
 <ItemGroup>
   <Compile Remove="Controllers\HomeController.cs" />
   <Compile Remove="ViewModels\Middleware.cs" />
+  <Compile Remove="Migrations\20171023190600_Initial.Designer.cs" />
+  <Compile Remove="Migrations\20171023190600_Initial.cs" />
+  <Compile Remove="Migrations\StackOverflowDbContextModelSnapshot.cs" />
 </ItemGroup>
 <ItemGroup>
   <Content Remove="Views\Home\About.cshtml" />

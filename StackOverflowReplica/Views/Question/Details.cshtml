@@ -4,16 +4,34 @@
 
 @if (User.Identity.IsAuthenticated)
  {
- <h2>Hello, @User.Identity.Name</h2>
-<hr/>
 
-@Html.ActionLink("Post a response", "Create", "Response")
+ <h1>@Model.Title - asked by @Model.User.UserName</h1>
+ <p>@Model.ContentBody</p>
+ <hr/>
+@Html.ActionLink("Post a response", "Create", "Response", new {QuestionId = Model.Id})
 } else {
     <p>@Html.ActionLink("Log in to view this question", "Login", "Account")</p>
 }
 
 @foreach(var response in Model.Responses)
-{
-    <p>response.ContentBody</p>
+{  
+    <hr/>
+    <h3>@response.User.UserName</h3>
+    <p>@response.ContentBody</p>
+    @if(response.Id == @Model.BestResponseId)
+    {   
+     <h1>This is the best answer</h1>
+    } else {
+       @if(User.Identity.Name == @Model.User.UserName)
+       {
+            @Html.ActionLink("Set as Best Response", "SetAsBest", "Question", new {ResponseId = response.Id, QuestionId = @Model.Id})
+       }
+
+    }
+ 
 }
+<hr/>
+@Html.ActionLink("View All Questions", "Index", "Question")
+
+
 

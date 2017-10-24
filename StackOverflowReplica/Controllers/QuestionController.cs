@@ -6,7 +6,8 @@ using StackOverflowReplica.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-
+using System.Security.Principal;
+using Microsoft.AspNetCore.Identity;
 namespace StackOverflowReplica.Controllers
 {
     [Authorize]
@@ -26,7 +27,7 @@ namespace StackOverflowReplica.Controllers
 			var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var currentUser = await _userManager.FindByIdAsync(userId);
 			//return View(_db.Questions.ToList()); 
-            return View(_db.Questions.Include(x => x.User).ToList());
+            return View(_db.Questions.Include(x => x.User).ToList().OrderByDescending(x=>x.Id));
 		}
 
         public IActionResult Create()
@@ -48,8 +49,21 @@ namespace StackOverflowReplica.Controllers
 
         public IActionResult Details(int QuestionId)
         {
-            var thisQuestion = _db.Questions.Include(x=>x.Responses).FirstOrDefault(x => x.Id == QuestionId);
+            var thisQuestion = _db.Questions.Include(x=>x.Responses)
+                                  .ThenInclude(r=>r.User)
+                                  .FirstOrDefault(x => x.Id == QuestionId);
             return View(thisQuestion);
+        }
+
+        public IActionResult SetAsBest(int ResponseId, int QuestionId)
+        {
+            var thisQuestion = _db.Questions.FirstOrDefault(x => x.Id == QuestionId);
+
+            thisQuestion.BestResponseId = ResponseId;
+            _db.Entry(thisQuestion).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return RedirectToAction("Details", "Question", new {QuestionId = QuestionId});
         }
     }
 }
