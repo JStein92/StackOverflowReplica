@@ -6,8 +6,7 @@ using StackOverflowReplica.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Principal;
-using Microsoft.AspNetCore.Identity;
+
 namespace StackOverflowReplica.Controllers
 {
     [Authorize]
@@ -26,8 +25,10 @@ namespace StackOverflowReplica.Controllers
 		{
 			var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 			var currentUser = await _userManager.FindByIdAsync(userId);
-			//return View(_db.Questions.ToList()); 
-            return View(_db.Questions.Include(x => x.User).ToList().OrderByDescending(x=>x.Id));
+            //return View(_db.Questions.ToList()); 
+            return View(_db.Questions.Include(x => x.User).
+                        Include(x => x.Responses).
+                        ToList().OrderByDescending(x=>x.VoteCount));
 		}
 
         public IActionResult Create()
@@ -49,8 +50,10 @@ namespace StackOverflowReplica.Controllers
 
         public IActionResult Details(int QuestionId)
         {
-            var thisQuestion = _db.Questions.Include(x=>x.Responses)
-                                  .ThenInclude(r=>r.User)
+            var thisQuestion = _db.Questions
+                                  .Include(y=>y.User)
+                                  .Include(x=>x.Responses)
+                                  .ThenInclude(r => r.User)
                                   .FirstOrDefault(x => x.Id == QuestionId);
             return View(thisQuestion);
         }
@@ -63,7 +66,16 @@ namespace StackOverflowReplica.Controllers
             _db.Entry(thisQuestion).State = EntityState.Modified;
             _db.SaveChanges();
 
-            return RedirectToAction("Details", "Question", new {QuestionId = QuestionId});
+            return RedirectToAction("Details", new {QuestionId = QuestionId});
         }
-    }
+
+		public IActionResult VoteQuestion(int id, int vote)
+		{
+            var thisQuestion = _db.Questions.FirstOrDefault(question => question.Id == id);
+            thisQuestion.VoteCount += vote;
+            _db.Entry(thisQuestion).State = EntityState.Modified;
+            _db.SaveChanges();
+            return RedirectToAction("Index");
+		}
+	}
 }

@@ -2,7 +2,6 @@
 
  @if (User.Identity.IsAuthenticated)
  {
- <h2>Hello, @User.Identity.Name</h2>
 <hr/>
 
 @Html.ActionLink("Ask a Question", "Create")
@@ -17,8 +16,10 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th></th>
       <th>Votes</th>
       <th>Title</th>
+	  <th>Responses</th>
       <th>Author</th>
     </tr>
   </thead>
@@ -28,8 +29,11 @@
     @foreach (var question in Model)
     {
     	<tr>
+			<td>@Html.ActionLink("Upvote", "VoteQuestion", "Question", new {id = question.Id, vote = 1}) 
+			| @Html.ActionLink("Downvote", "VoteQuestion", "Question", new {id = question.Id, vote = -1})</td>
           <td>@Html.DisplayFor(modelQuestion => question.VoteCount)</td>
           <td>@Html.ActionLink((string)question.Title, "Details", "Question", new { QuestionId = question.Id })</td>
+		  <td>@question.Responses.Count</td>
           <td>@Html.DisplayFor(modelQuestion => question.User.UserName)</td>
         </tr>
     }

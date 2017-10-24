@@ -41,5 +41,15 @@ namespace StackOverflowReplica.Controllers
             return RedirectToAction("Details", "Question", new { QuestionId = response.QuestionId });
         }
 
+        public IActionResult VoteResponse(int ResponseId, int QuestionId, int vote)
+        {
+            var thisResponse = _db.Responses.FirstOrDefault(response => response.Id == ResponseId);
+            thisResponse.VoteCount += vote;
+            _db.Entry(thisResponse).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return RedirectToAction("Details", "Question", new { QuestionId = QuestionId });
+        }
+
     }
 }
